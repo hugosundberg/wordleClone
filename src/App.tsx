@@ -10,8 +10,16 @@ export default function App() {
 
   useEffect(() => {
     const handleTyping = (event: KeyboardEvent) => {
+      if (/^[a-zA-Z]$/.test(event.key)) {
+        setCurrentGuess(currentGuess + event.key);
+      }
+
       if (event.key === "Enter") {
-        return;
+        if (currentGuess.length < 5) {
+          return;
+        } else {
+          // Submit guess
+        }
       }
 
       if (event.key === "Backspace") {
@@ -19,7 +27,9 @@ export default function App() {
         return;
       }
 
-      setCurrentGuess(currentGuess + event.key);
+      if (currentGuess.length >= 5) {
+        return;
+      }
     };
 
     window.addEventListener("keydown", handleTyping);
