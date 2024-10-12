@@ -4,12 +4,17 @@ import { words } from "./words.tsx";
 
 export default function App() {
   const exampleWords = [words];
-  const [solution, setSolution] = useState("");
+  const [solution, setSolution] = useState("HELLO");
   const [guesses, setGuesses] = useState(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
     const handleTyping = (event: KeyboardEvent) => {
+      if (isGameOver) {
+        return;
+      }
+
       if (/^[a-zA-Z]$/.test(event.key)) {
         setCurrentGuess(currentGuess + event.key);
       }
@@ -17,9 +22,20 @@ export default function App() {
       if (event.key === "Enter") {
         if (currentGuess.length < 5) {
           return;
-        } else {
-          // Submit guess
         }
+
+        const isCorrect = solution === currentGuess;
+
+        if (isCorrect) {
+          setIsGameOver(true);
+          return;
+        }
+
+        // Submit guess
+        const newGuesses = [...guesses];
+        newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
+        setGuesses(newGuesses);
+        setCurrentGuess("");
       }
 
       if (event.key === "Backspace") {
@@ -37,7 +53,8 @@ export default function App() {
     return () => {
       window.removeEventListener("keydown", handleTyping);
     };
-  }, [currentGuess]);
+  }, [currentGuess, guesses]);
+
   let keyIndex = 0;
 
   return (
