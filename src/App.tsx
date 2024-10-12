@@ -1,4 +1,9 @@
 function App() {
+  const handleKeyDown = (event: { key: any }) => {
+    // Logs the key that was pressed
+    console.log(`Key pressed: ${event.key}`);
+  };
+
   return (
     <>
       <div className="game-body">
