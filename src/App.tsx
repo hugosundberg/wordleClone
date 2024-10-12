@@ -5,10 +5,14 @@ import { words } from "./words.tsx";
 const BASE_URL = "https://api.frontendexpert.io/api/fe/wordle-words";
 
 export default function App() {
-  const handleKeyDown = (event: { key: any }) => {
-    // Logs the key that was pressed
-    console.log(`Key pressed: ${event.key}`);
+  const handleTyping = (event: any) => {
+    console.log(event.key);
   };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleTyping);
+  });
+
   const exampleWords = [words];
   const [solution, setSolution] = useState("");
 
