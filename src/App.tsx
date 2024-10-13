@@ -3,11 +3,18 @@ import "./App.css";
 import { words } from "./words.tsx";
 
 export default function App() {
-  const exampleWords = [words];
-  const [solution, setSolution] = useState("HELLO");
+  const [solution, setSolution] = useState("");
   const [guesses, setGuesses] = useState(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * words.length - 1);
+    setSolution(words[randomIndex].toLowerCase());
+  }, []);
+
+  // Displays randomly selected solution
+  console.log(solution);
 
   useEffect(() => {
     const handleTyping = (event: KeyboardEvent) => {
@@ -16,7 +23,7 @@ export default function App() {
       }
 
       if (/^[a-zA-Z]$/.test(event.key)) {
-        setCurrentGuess(currentGuess + event.key);
+        setCurrentGuess((previousGuess) => previousGuess + event.key);
       }
 
       if (event.key === "Enter") {
@@ -24,17 +31,18 @@ export default function App() {
           return;
         }
 
-        const isCorrect = solution === currentGuess;
-
-        if (isCorrect) {
-          setIsGameOver(true);
-          return;
-        }
-
         // Submit guess
         const newGuesses = [...guesses];
-        newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
+        const currentIndex = guesses.findIndex((val) => val == null);
+        newGuesses[currentIndex] = currentGuess;
         setGuesses(newGuesses);
+
+        if (currentGuess === solution) {
+          setIsGameOver(true);
+        } else if (currentIndex === 5) {
+          setIsGameOver(true);
+        }
+
         setCurrentGuess("");
       }
 
@@ -53,7 +61,11 @@ export default function App() {
     return () => {
       window.removeEventListener("keydown", handleTyping);
     };
-  }, [currentGuess, guesses]);
+  }, [currentGuess, guesses, isGameOver, solution]);
+
+  // Debugging logs
+  console.log("Current guess: " + currentGuess);
+  console.log("Is game over: " + isGameOver);
 
   let keyIndex = 0;
 
@@ -69,9 +81,6 @@ export default function App() {
               key={keyIndex++}
             />
           );
-          {
-            currentGuess;
-          }
         })}
       </div>
     </>
@@ -82,10 +91,9 @@ function Row({ guess }: any) {
   const tiles = [];
 
   for (let i = 0; i < 5; i++) {
-    const character = guess[i];
     tiles.push(
       <div key={i} className="tile">
-        {character}
+        {guess[i] || ""}
       </div>
     );
   }
