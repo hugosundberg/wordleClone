@@ -7,52 +7,44 @@ export default function App() {
   const [guesses, setGuesses] = useState(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
+  const [currentRow, setCurrentRow] = useState(0); // Track current row
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * words.length - 1);
+    const randomIndex = Math.floor(Math.random() * words.length);
     setSolution(words[randomIndex].toLowerCase());
   }, []);
 
-  // Displays randomly selected solution
-  console.log(solution);
+  // Debugging logs
+  console.log("Solution: " + solution);
 
   useEffect(() => {
     const handleTyping = (event: KeyboardEvent) => {
-      if (isGameOver) {
-        return;
-      }
+      if (isGameOver) return;
 
-      if (/^[a-zA-Z]$/.test(event.key)) {
-        setCurrentGuess((previousGuess) => previousGuess + event.key);
+      if (/^[a-zA-Z]$/.test(event.key) && currentGuess.length < 5) {
+        setCurrentGuess((prev) => prev + event.key.toLowerCase());
       }
 
       if (event.key === "Enter") {
-        if (currentGuess.length < 5) {
-          return;
-        }
+        if (currentGuess.length < 5) return;
 
         // Submit guess
         const newGuesses = [...guesses];
-        const currentIndex = guesses.findIndex((val) => val == null);
-        newGuesses[currentIndex] = currentGuess;
+        newGuesses[currentRow] = currentGuess; // Finalize the guess for the current row
         setGuesses(newGuesses);
+        setCurrentRow((prev) => prev + 1); // Move to the next row
 
         if (currentGuess === solution) {
           setIsGameOver(true);
-        } else if (currentIndex === 5) {
-          setIsGameOver(true);
+        } else if (currentRow === 5) {
+          setIsGameOver(true); // End game after 6th row
         }
 
-        setCurrentGuess("");
+        setCurrentGuess(""); // Clear current guess after submission
       }
 
       if (event.key === "Backspace") {
-        setCurrentGuess(currentGuess.slice(0, -1));
-        return;
-      }
-
-      if (currentGuess.length >= 5) {
-        return;
+        setCurrentGuess((prev) => prev.slice(0, -1)); // Correct Backspace handling
       }
     };
 
@@ -61,38 +53,47 @@ export default function App() {
     return () => {
       window.removeEventListener("keydown", handleTyping);
     };
-  }, [currentGuess, guesses, isGameOver, solution]);
+  }, [currentGuess, guesses, isGameOver, solution, currentRow]);
 
   // Debugging logs
   console.log("Current guess: " + currentGuess);
   console.log("Is game over: " + isGameOver);
 
-  let keyIndex = 0;
-
   return (
     <>
       <div className="game-body">
         <h1>Wordle Clone</h1>
-        {guesses.map((guess, i) => {
-          const isCurrentGuess = i === guesses.findIndex((val) => val == null);
-          return (
-            <Row
-              guess={isCurrentGuess ? currentGuess : guess ?? ""}
-              key={keyIndex++}
-            />
-          );
-        })}
+        {guesses.map((guess, i) => (
+          <Row
+            guess={i === currentRow ? currentGuess : guess ?? ""}
+            key={i}
+            solution={solution}
+            isFinal={i < currentRow} // Only final rows get the color class applied
+          />
+        ))}
       </div>
     </>
   );
 }
 
-function Row({ guess }: any) {
+function Row({ guess = "", solution, isFinal }: any) {
   const tiles = [];
 
   for (let i = 0; i < 5; i++) {
+    let className = "tile";
+
+    if (isFinal) {
+      if (guess[i] === solution[i]) {
+        className = "tile correct"; // Correct letter and position
+      } else if (solution.includes(guess[i])) {
+        className = "tile close"; // Correct letter, wrong position
+      } else {
+        className = "tile absent"; // Incorrect letter
+      }
+    }
+
     tiles.push(
-      <div key={i} className="tile">
+      <div key={i} className={className}>
         {guess[i] || ""}
       </div>
     );
