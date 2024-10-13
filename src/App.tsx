@@ -7,15 +7,23 @@ export default function App() {
   const [guesses, setGuesses] = useState(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
-  const [currentRow, setCurrentRow] = useState(0); // Track current row
+  const [currentRow, setCurrentRow] = useState(0);
+  const [definition, setDefinition] = useState("");
 
-  useEffect(() => {
+  // Initialize a new game
+  const startNewGame = () => {
     const randomIndex = Math.floor(Math.random() * words.length);
     setSolution(words[randomIndex].toLowerCase());
-  }, []);
+    setGuesses(Array(6).fill(null));
+    setCurrentGuess("");
+    setIsGameOver(false);
+    setCurrentRow(0);
+    setDefinition("");
+  };
 
-  // Debugging logs
-  console.log("Solution: " + solution);
+  useEffect(() => {
+    startNewGame(); // Starts the game when the component is first loaded
+  }, []);
 
   useEffect(() => {
     const handleTyping = (event: KeyboardEvent) => {
@@ -30,21 +38,21 @@ export default function App() {
 
         // Submit guess
         const newGuesses = [...guesses];
-        newGuesses[currentRow] = currentGuess; // Finalize the guess for the current row
+        newGuesses[currentRow] = currentGuess;
         setGuesses(newGuesses);
-        setCurrentRow((prev) => prev + 1); // Move to the next row
+        setCurrentRow((prev) => prev + 1);
 
         if (currentGuess === solution) {
           setIsGameOver(true);
         } else if (currentRow === 5) {
-          setIsGameOver(true); // End game after 6th row
+          setIsGameOver(true);
         }
 
-        setCurrentGuess(""); // Clear current guess after submission
+        setCurrentGuess("");
       }
 
       if (event.key === "Backspace") {
-        setCurrentGuess((prev) => prev.slice(0, -1)); // Correct Backspace handling
+        setCurrentGuess((prev) => prev.slice(0, -1));
       }
     };
 
@@ -55,10 +63,6 @@ export default function App() {
     };
   }, [currentGuess, guesses, isGameOver, solution, currentRow]);
 
-  // Debugging logs
-  console.log("Current guess: " + currentGuess);
-  console.log("Is game over: " + isGameOver);
-
   return (
     <>
       <div className="game-body">
@@ -68,12 +72,66 @@ export default function App() {
             guess={i === currentRow ? currentGuess : guess ?? ""}
             key={i}
             solution={solution}
-            isFinal={i < currentRow} // Only final rows get the color class applied
+            isFinal={i < currentRow}
           />
         ))}
+        <Definition
+          isGameOver={isGameOver}
+          solution={solution}
+          definition={definition}
+          setDefinition={setDefinition}
+          startNewGame={startNewGame}
+        />
       </div>
     </>
   );
+}
+
+function Definition({
+  isGameOver,
+  solution,
+  definition,
+  setDefinition,
+  startNewGame,
+}: any) {
+  const showDefinition = async () => {
+    try {
+      const res = await fetch(
+        "https://api.dictionaryapi.dev/api/v2/entries/en/" + solution
+      );
+
+      if (!res.ok) {
+        throw new Error(`Error fetching definition: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      const fetchedDefinition =
+        data[0]?.meanings[0]?.definitions[0]?.definition ||
+        "Definition not found";
+
+      setDefinition(fetchedDefinition);
+    } catch (error) {
+      console.error("Failed to fetch the definition: ", error);
+      setDefinition("Definition not found");
+    }
+  };
+
+  if (isGameOver) {
+    return (
+      <>
+        <h2 className="solution">Correct answer: {solution}</h2>
+        <button onClick={showDefinition} className="button">
+          Show Definition
+        </button>
+        {definition && <p className="definition">Definition: {definition}</p>}
+        <button onClick={startNewGame} className="button">
+          Try Again
+        </button>
+      </>
+    );
+  }
+
+  return null;
 }
 
 function Row({ guess = "", solution, isFinal }: any) {
@@ -84,11 +142,11 @@ function Row({ guess = "", solution, isFinal }: any) {
 
     if (isFinal) {
       if (guess[i] === solution[i]) {
-        className = "tile correct"; // Correct letter and position
+        className = "tile correct";
       } else if (solution.includes(guess[i])) {
-        className = "tile close"; // Correct letter, wrong position
+        className = "tile close";
       } else {
-        className = "tile absent"; // Incorrect letter
+        className = "tile absent";
       }
     }
 

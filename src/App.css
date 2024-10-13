@@ -44,3 +44,16 @@
 .absent {
   background-color: lightgrey;
 }
+
+.solution {
+  text-transform: capitalize;
+}
+
+.definition {
+  max-width: 400px;
+}
+
+.button {
+  width: 200px;
+  margin-top: 20px;
+}
