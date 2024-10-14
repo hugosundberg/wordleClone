@@ -11,8 +11,9 @@ export default function App() {
   const [currentRow, setCurrentRow] = useState(0);
   const [definition, setDefinition] = useState("");
   const [hasWon, setHasWon] = useState(false);
-  const [isInfoVisable, setIsInfoVisable] = useState(false);
-  const [isAboutVisable, setIsAboutVisable] = useState(false);
+  const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [isAboutVisible, setIsAboutVisible] = useState(false);
+  const [isInstructionsVisible, setIsInstructionsVisible] = useState(false);
 
   // Initialize a new game
   const startNewGame = () => {
@@ -70,22 +71,34 @@ export default function App() {
     };
   }, [currentGuess, guesses, isGameOver, solution, currentRow]);
 
+  const showInstructions = () => {
+    setIsInstructionsVisible(true);
+    setIsAboutVisible(false);
+    setIsInfoVisible(false);
+  };
+
+  const closeInstruction = () => {
+    setIsInstructionsVisible(false);
+  };
+
   const showInfo = () => {
-    setIsInfoVisable(true);
-    setIsAboutVisable(false);
+    setIsInfoVisible(true);
+    setIsAboutVisible(false);
+    setIsInstructionsVisible(false);
   };
 
   const closeInfo = () => {
-    setIsInfoVisable(false);
+    setIsInfoVisible(false);
   };
 
   const showAbout = () => {
-    setIsAboutVisable(true);
-    setIsInfoVisable(false);
+    setIsAboutVisible(true);
+    setIsInfoVisible(false);
+    setIsInstructionsVisible(false);
   };
 
   const closeAbout = () => {
-    setIsAboutVisable(false);
+    setIsAboutVisible(false);
   };
 
   return (
@@ -95,13 +108,13 @@ export default function App() {
         <div className="nav-menu">
           <ul>
             <li>
+              <button onClick={showInstructions}>Instructions</button>
+            </li>
+            <li>
               <button onClick={showInfo}>Info</button>
             </li>
             <li>
               <button onClick={showAbout}>About Me</button>
-            </li>
-            <li>
-              <button>Hugo</button>
             </li>
           </ul>
         </div>
@@ -125,12 +138,14 @@ export default function App() {
           startNewGame={startNewGame}
           hasWon={hasWon}
         />
-        <Info isInfoVisable={isInfoVisable} closeInfo={closeInfo} />
-        <About isAboutVisable={isAboutVisable} closeAbout={closeAbout} />
+        <Info isInfoVisable={isInfoVisible} closeInfo={closeInfo} />
+        <About isAboutVisable={isAboutVisible} closeAbout={closeAbout} />
       </div>
     </>
   );
 }
+
+function Instructions({}) {}
 
 function Info({ isInfoVisable, closeInfo }: any) {
   if (isInfoVisable) {
@@ -173,7 +188,11 @@ function About({ isAboutVisable, closeAbout }: any) {
           University with a Bachelors Degree in Design of Information Systems.
         </p>
         <p>
-          Feel free to visit my portfolio website to see more of my projects.
+          Feel free to visit my{" "}
+          <a href="https://hugosundberg.github.io/hugo/" target="_blank">
+            portfolio website
+          </a>{" "}
+          to see more of my projects.
         </p>
       </div>
     );

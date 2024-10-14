@@ -21,7 +21,7 @@
 
 .nav-menu ul {
   display: flex;
-  gap: 60px;
+  gap: 20px;
   list-style: none;
   color: white;
 }
@@ -101,7 +101,8 @@
 
 .popup-header button {
   position: absolute;
-  top: 10px;
+  scale: 1.5;
+  top: 15px;
   right: 10px;
   background-color: transparent;
 }
