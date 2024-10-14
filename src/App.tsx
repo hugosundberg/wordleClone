@@ -27,8 +27,6 @@ export default function App() {
     setHasWon(false);
   };
 
-  console.log(solution);
-
   useEffect(() => {
     startNewGame(); // Starts the game when the component is first loaded
   }, []);
