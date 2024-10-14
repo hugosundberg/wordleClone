@@ -84,7 +84,7 @@
   margin: 10px;
 }
 
-.info {
+.popup {
   background-color: black;
   max-width: 400px;
   padding: 40px;
@@ -93,20 +93,16 @@
   top: 120px;
 }
 
-.info-header {
+.popup-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.info-header button {
+.popup-header button {
   position: absolute;
   top: 10px;
   right: 10px;
   background-color: transparent;
-}
-
-.info-header i {
-  scale: 1.5;
 }
 

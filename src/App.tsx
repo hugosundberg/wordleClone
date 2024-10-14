@@ -12,6 +12,7 @@ export default function App() {
   const [definition, setDefinition] = useState("");
   const [hasWon, setHasWon] = useState(false);
   const [isInfoVisable, setIsInfoVisable] = useState(false);
+  const [isAboutVisable, setIsAboutVisable] = useState(false);
 
   // Initialize a new game
   const startNewGame = () => {
@@ -77,6 +78,14 @@ export default function App() {
     setIsInfoVisable(false);
   };
 
+  const showAbout = () => {
+    setIsAboutVisable(true);
+  };
+
+  const closeAbout = () => {
+    setIsAboutVisable(false);
+  };
+
   return (
     <>
       <div className="navbar">
@@ -87,7 +96,7 @@ export default function App() {
               <button onClick={showInfo}>Info</button>
             </li>
             <li>
-              <button>About Me</button>
+              <button onClick={showAbout}>About Me</button>
             </li>
             <li>
               <button>Hugo</button>
@@ -115,6 +124,7 @@ export default function App() {
           hasWon={hasWon}
         />
         <Info isInfoVisable={isInfoVisable} closeInfo={closeInfo} />
+        <About isAboutVisable={isAboutVisable} closeAbout={closeAbout} />
       </div>
     </>
   );
@@ -123,8 +133,8 @@ export default function App() {
 function Info({ isInfoVisable, closeInfo }: any) {
   if (isInfoVisable) {
     return (
-      <div className="info">
-        <div className="info-header">
+      <div className="popup">
+        <div className="popup-header">
           <h3>Info</h3>
           <button onClick={closeInfo}>
             <i className="bi bi-x-lg"></i>
@@ -138,6 +148,30 @@ function Info({ isInfoVisable, closeInfo }: any) {
         <p>
           This app uses the public API https://dictionaryapi.dev/ for fetching
           definitions of words.
+        </p>
+      </div>
+    );
+  }
+}
+
+function About({ isAboutVisable, closeAbout }: any) {
+  if (isAboutVisable) {
+    return (
+      <div className="popup">
+        <div className="popup-header">
+          <h3>Hi, my name is Hugo!</h3>
+          <button onClick={closeAbout}>
+            <i className="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <p>
+          I'm a software engineer from Sweden with a passion for quizzes and
+          puzzle games. My career started as a music producer where I developed
+          an interest in software developement. In 2024, I graduated Lund
+          University with a Bachelors Degree in Design of Information Systems.
+        </p>
+        <p>
+          Feel free to visit my portfolio website to see more of my projects.
         </p>
       </div>
     );
