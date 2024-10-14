@@ -9,6 +9,7 @@ export default function App() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentRow, setCurrentRow] = useState(0);
   const [definition, setDefinition] = useState("");
+  const [hasWon, setHasWon] = useState(false);
 
   // Initialize a new game
   const startNewGame = () => {
@@ -20,6 +21,8 @@ export default function App() {
     setCurrentRow(0);
     setDefinition("");
   };
+
+  console.log(solution);
 
   useEffect(() => {
     startNewGame(); // Starts the game when the component is first loaded
@@ -44,6 +47,7 @@ export default function App() {
 
         if (currentGuess === solution) {
           setIsGameOver(true);
+          setHasWon(true);
         } else if (currentRow === 5) {
           setIsGameOver(true);
         }
@@ -75,19 +79,29 @@ export default function App() {
             isFinal={i < currentRow}
           />
         ))}
-        <Definition
+        <Solution isGameOver={isGameOver} solution={solution} hasWon={hasWon} />
+        <Buttons
           isGameOver={isGameOver}
           solution={solution}
           definition={definition}
           setDefinition={setDefinition}
           startNewGame={startNewGame}
+          hasWon={hasWon}
         />
       </div>
     </>
   );
 }
 
-function Definition({
+function Solution({ solution, isGameOver, hasWon }: any) {
+  if (isGameOver && hasWon) {
+    return <h2 className="solution">Congratulations!</h2>;
+  } else if (isGameOver) {
+    return <h2 className="solution">Solution: {solution}</h2>;
+  }
+}
+
+function Buttons({
   isGameOver,
   solution,
   definition,
@@ -119,7 +133,6 @@ function Definition({
   if (isGameOver) {
     return (
       <>
-        <h2 className="solution">Correct answer: {solution}</h2>
         <button onClick={showDefinition} className="button">
           Show Definition
         </button>
