@@ -86,11 +86,15 @@
 
 .popup {
   background-color: black;
-  max-width: 400px;
+  width: 400px;
   padding: 40px;
   border-radius: 30px;
   position: absolute;
   top: 120px;
+}
+
+.popup li {
+  margin-bottom: 15px;
 }
 
 .popup-header {

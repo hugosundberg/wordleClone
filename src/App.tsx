@@ -24,6 +24,7 @@ export default function App() {
     setIsGameOver(false);
     setCurrentRow(0);
     setDefinition("");
+    setHasWon(false);
   };
 
   console.log(solution);
@@ -108,7 +109,7 @@ export default function App() {
         <div className="nav-menu">
           <ul>
             <li>
-              <button onClick={showInstructions}>Instructions</button>
+              <button onClick={showInstructions}>How to play?</button>
             </li>
             <li>
               <button onClick={showInfo}>Info</button>
@@ -138,6 +139,10 @@ export default function App() {
           startNewGame={startNewGame}
           hasWon={hasWon}
         />
+        <Instructions
+          isInstructionsVisible={isInstructionsVisible}
+          closeInstruction={closeInstruction}
+        />
         <Info isInfoVisable={isInfoVisible} closeInfo={closeInfo} />
         <About isAboutVisable={isAboutVisible} closeAbout={closeAbout} />
       </div>
@@ -145,7 +150,34 @@ export default function App() {
   );
 }
 
-function Instructions({}) {}
+function Instructions({ isInstructionsVisible, closeInstruction }: any) {
+  if (isInstructionsVisible) {
+    return (
+      <div className="popup">
+        <div className="popup-header">
+          <h3>How to play</h3>
+          <button onClick={closeInstruction}>
+            <i className="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <h2>Guess the five letter word in 6 tries</h2>
+        <ul>
+          <li>Each guess must be a five letter word</li>
+          <li>
+            The color of the tiles will change to show how close your guess was
+          </li>
+          <li>A grey tile means the letter is incorrect</li>
+          <li>
+            Yellow indicates that the letter is in the word but in the wrong
+            location
+          </li>
+          <li>Green means the letter is correctly placed</li>
+        </ul>
+      </div>
+    );
+  }
+  return;
+}
 
 function Info({ isInfoVisable, closeInfo }: any) {
   if (isInfoVisable) {
@@ -158,9 +190,13 @@ function Info({ isInfoVisable, closeInfo }: any) {
           </button>
         </div>
         <p>
-          This game is a clone of the classic game Wordle, created by The New
-          York Times. I do not claim any rights to the original game. This app
-          has been created solely for educational purposes.
+          This game is a clone of the classic game{" "}
+          <a href="https://www.nytimes.com/games/wordle/" target="_blank">
+            Wordle
+          </a>
+          , created by The New York Times. I do not claim any rights to the
+          original game. This app has been created solely for educational
+          purposes.
         </p>
         <p>
           This app uses the public API https://dictionaryapi.dev/ for fetching
@@ -203,7 +239,12 @@ function Solution({ solution, isGameOver, hasWon }: any) {
   if (isGameOver && hasWon) {
     return <h2 className="solution">Congratulations!</h2>;
   } else if (isGameOver) {
-    return <h2 className="solution">Solution: {solution}</h2>;
+    return (
+      <>
+        <h2>Unlucky!</h2>
+        <h2 className="solution">Solution: {solution}</h2>
+      </>
+    );
   }
 }
 
