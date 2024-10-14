@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { words } from "./words.tsx";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function App() {
   const [solution, setSolution] = useState("");
@@ -10,6 +11,7 @@ export default function App() {
   const [currentRow, setCurrentRow] = useState(0);
   const [definition, setDefinition] = useState("");
   const [hasWon, setHasWon] = useState(false);
+  const [isInfoVisable, setIsInfoVisable] = useState(false);
 
   // Initialize a new game
   const startNewGame = () => {
@@ -67,8 +69,32 @@ export default function App() {
     };
   }, [currentGuess, guesses, isGameOver, solution, currentRow]);
 
+  const showInfo = () => {
+    setIsInfoVisable(true);
+  };
+
+  const closeInfo = () => {
+    setIsInfoVisable(false);
+  };
+
   return (
     <>
+      <div className="navbar">
+        <div className="nav-title">Wordle Clone</div>
+        <div className="nav-menu">
+          <ul>
+            <li>
+              <button onClick={showInfo}>Info</button>
+            </li>
+            <li>
+              <button>About Me</button>
+            </li>
+            <li>
+              <button>Hugo</button>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div className="game-body">
         <h1>Wordle Clone</h1>
         {guesses.map((guess, i) => (
@@ -88,9 +114,34 @@ export default function App() {
           startNewGame={startNewGame}
           hasWon={hasWon}
         />
+        <Info isInfoVisable={isInfoVisable} closeInfo={closeInfo} />
       </div>
     </>
   );
+}
+
+function Info({ isInfoVisable, closeInfo }: any) {
+  if (isInfoVisable) {
+    return (
+      <div className="info">
+        <div className="info-header">
+          <h3>Info</h3>
+          <button onClick={closeInfo}>
+            <i className="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <p>
+          This game is a clone of the classic game Wordle, created by The New
+          York Times. I do not claim any rights to the original game. This app
+          has been created solely for educational purposes.
+        </p>
+        <p>
+          This app uses the public API https://dictionaryapi.dev/ for fetching
+          definitions of words.
+        </p>
+      </div>
+    );
+  }
 }
 
 function Solution({ solution, isGameOver, hasWon }: any) {

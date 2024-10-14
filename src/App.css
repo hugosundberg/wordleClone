@@ -5,11 +5,37 @@
   color: white;
 }
 
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-inline: 20px;
+  background-color: black;
+}
+
+.nav-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-menu ul {
+  display: flex;
+  gap: 60px;
+  list-style: none;
+  color: white;
+}
+
+.nav-menu a {
+  color: white;
+}
+
 .game-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 
 .row {
@@ -57,3 +83,30 @@
   width: 200px;
   margin: 10px;
 }
+
+.info {
+  background-color: black;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 30px;
+  position: absolute;
+  top: 120px;
+}
+
+.info-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.info-header button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+}
+
+.info-header i {
+  scale: 1.5;
+}
+
