@@ -72,6 +72,7 @@ export default function App() {
 
   const showInfo = () => {
     setIsInfoVisable(true);
+    setIsAboutVisable(false);
   };
 
   const closeInfo = () => {
@@ -80,6 +81,7 @@ export default function App() {
 
   const showAbout = () => {
     setIsAboutVisable(true);
+    setIsInfoVisable(false);
   };
 
   const closeAbout = () => {
